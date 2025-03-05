@@ -1,0 +1,49 @@
+{
+  "todos": [
+    {
+      "id": "0",
+      "text": "Make a to-do list",
+      "done": false
+    },
+    {
+      "id": "1",
+      "text": "Buy groceries",
+      "done": false
+    },
+    {
+      "id": "2",
+      "text": "Read a book",
+      "done": true
+    },
+    {
+      "id": "3",
+      "text": "Write blog post",
+      "done": false
+    },
+    {
+      "id": "4",
+      "text": "Exercise",
+      "done": true
+    },
+    {
+      "id": "5",
+      "text": "Call mom",
+      "done": false
+    },
+    {
+      "id": "6",
+      "text": "Clean the house",
+      "done": false
+    },
+    {
+      "id": "7",
+      "text": "Finish project report",
+      "done": true
+    },
+    {
+      "id": "71",
+      "text": "Prepare server",
+      "done": false
+    }
+  ]
+}
