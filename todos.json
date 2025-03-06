@@ -13,7 +13,7 @@
     {
       "id": "2",
       "text": "Read a book",
-      "done": true
+      "done": false
     },
     {
       "id": "3",
@@ -23,7 +23,7 @@
     {
       "id": "4",
       "text": "Exercise",
-      "done": true
+      "done": false
     },
     {
       "id": "5",
@@ -38,11 +38,11 @@
     {
       "id": "7",
       "text": "Finish project report",
-      "done": true
+      "done": false
     },
     {
-      "id": "71",
-      "text": "Prepare server",
+      "id": "8",
+      "text": "Start homelab",
       "done": false
     }
   ]

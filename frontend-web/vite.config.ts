@@ -11,4 +11,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/todos' : {
+        target: 'http://localhost:5000/todos',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/todos/, ''),
+      }
+    }
+  }
 })
