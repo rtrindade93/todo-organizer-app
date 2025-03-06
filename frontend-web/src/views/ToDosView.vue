@@ -47,6 +47,18 @@ const completeTodo = async (todoId: Integer): Promise<void> => {
   }
 }
 
+const deleteTodo = async (todoId: Integer): Promise<void> => {
+  try {
+    await axios.delete(`/todos/${todoId}`);
+    todos.value = todos.value.filter(t => t.id !== todoId);
+
+    toast.success('To Do deleted succfuly!');
+  } catch (error) {
+    console.error('Error deleting To Do', error);
+    toast.error('To Do not deleted!');
+  }
+}
+
 onMounted(async () => {
   await getTodos();
 });
@@ -60,9 +72,11 @@ onMounted(async () => {
       </div>
       <div class="mt-4">
         <ul class="divide-y divide-gray-200">
-          <li v-for="todo in todos" :key="todo.id" class="py-4">
+          <li v-for="todo in todos" :key="todo.id" class="py-4 grid grid-cols-[5%_90%_5%] gap-4">
             <input @change="completeTodo(todo.id)" v-model="todo.done" type="checkbox" class="mr-2" />
-            {{ todo.text }}
+            <span :class="[todo.done ? 'line-through' : '']">{{ todo.text }}</span>
+            <button type="button" @click="deleteTodo(todo.id)">
+              <i class="pi pi-trash text-gray-800 hover:text-red-600"></i></button>
           </li>
           <li class="py-4 grid grid-cols-[70%_30%] gap-4">
             <input v-model="newTodo" class="block text-sm font-medium text-gray-700 placeholder:text-gray-500 pl-[14px]"
