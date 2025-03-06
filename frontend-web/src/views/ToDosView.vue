@@ -52,7 +52,7 @@ const deleteTodo = async (todoId: Integer): Promise<void> => {
     await axios.delete(`/todos/${todoId}`);
     todos.value = todos.value.filter(t => t.id !== todoId);
 
-    toast.success('To Do deleted succfuly!');
+    toast.success('To Do deleted successfully!');
   } catch (error) {
     console.error('Error deleting To Do', error);
     toast.error('To Do not deleted!');
