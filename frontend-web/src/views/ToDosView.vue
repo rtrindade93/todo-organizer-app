@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue';
-import { useToast } from 'vue-toastification'
+import ToDosComponent from '@/components/ToDosComponent.vue';
 import { Todo } from '@/models/todo.model';
 import axios from 'axios';
+import { onMounted, type Ref, ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
 const toast = useToast();
-
+const filterOption: Ref<string> = ref('');
 const todos: Ref<Todo[]> = ref([]);
-const newTodo: Ref<string> = ref('');
+
+const changeFilterOption = async (option: string): Promise<void> => {
+  filterOption.value = option;
+  await getTodos();
+
+  switch (option) {
+    case 'todo':
+      todos.value = todos.value.filter(t => !t.done);
+      break;
+    case 'done':
+      todos.value = todos.value.filter(t => t.done);
+      break;
+    case 'all':
+      break;
+  }
+}
 
 const getTodos = async (): Promise<void> => {
   try {
@@ -19,12 +35,11 @@ const getTodos = async (): Promise<void> => {
   }
 }
 
-const addTodo = async (): Promise<void> => {
+const addTodo = async (newTodo: string): Promise<void> => {
   try {
-    const todoToAdd = new Todo(`${Number(todos.value[todos.value.length - 1].id) + 1}`, newTodo.value);
+    const todoToAdd = new Todo(`${Number(todos.value[todos.value.length - 1].id) + 1}`, newTodo);
     await axios.post('/todos', todoToAdd);
     todos.value.push(todoToAdd);
-    newTodo.value = '';
 
     toast.success('To Do successfully added!');
   } catch (error) {
@@ -33,7 +48,7 @@ const addTodo = async (): Promise<void> => {
   }
 }
 
-const completeTodo = async (todoId: Integer): Promise<void> => {
+const completeTodo = async (todoId: string): Promise<void> => {
   try {
     const foundTodo = todos.value.find(t => todoId === t.id);
     if (foundTodo) {
@@ -47,7 +62,7 @@ const completeTodo = async (todoId: Integer): Promise<void> => {
   }
 }
 
-const deleteTodo = async (todoId: Integer): Promise<void> => {
+const deleteTodo = async (todoId: string): Promise<void> => {
   try {
     await axios.delete(`/todos/${todoId}`);
     todos.value = todos.value.filter(t => t.id !== todoId);
@@ -59,33 +74,41 @@ const deleteTodo = async (todoId: Integer): Promise<void> => {
   }
 }
 
-onMounted(async () => {
-  await getTodos();
+onMounted(() => {
+  changeFilterOption('todo');
 });
 </script>
 
 <template>
   <section class="py-4">
     <div class="container-sm sm:container m-auto">
-      <div class="flex justify-center items-center">
-        <h1 class="text-2xl font-bold">ToDos</h1>
-      </div>
-      <div class="mt-4">
-        <ul class="divide-y divide-gray-200">
-          <li v-for="todo in todos" :key="todo.id" class="py-4 grid grid-cols-[5%_90%_5%] gap-4">
-            <input @change="completeTodo(todo.id)" v-model="todo.done" type="checkbox" class="mr-2" />
-            <span :class="[todo.done ? 'line-through' : '']">{{ todo.text }}</span>
-            <button type="button" @click="deleteTodo(todo.id)">
-              <i class="pi pi-trash text-gray-800 hover:text-red-600"></i></button>
-          </li>
-          <li class="py-4 grid grid-cols-[70%_30%] gap-4">
-            <input v-model="newTodo" class="block text-sm font-medium text-gray-700 placeholder:text-gray-500 pl-[14px]"
-              type="text" placeholder="Add a new todo" />
-            <button type="button" @click.prevent="addTodo"
-              class="mt-2 bg-gray-800 text-white px-4 py-2 rounded">Add</button>
-          </li>
-        </ul>
-      </div>
+      <ul
+        class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
+        <li class="me-2">
+          <a type="button" aria-current="page"
+            :class="[filterOption === 'todo' ? 'bg-gray-400' : 'bg-gray-100', 'inline-block', 'p-4', 'text-gray-600', 'rounded-t-lg', 'hover:bg-gray-400']"
+            @click="changeFilterOption('todo')">
+            To Do's
+          </a>
+        </li>
+        <li class="me-2">
+          <a type="button" aria-current="page"
+            :class="[filterOption === 'done' ? 'bg-gray-400' : 'bg-gray-100', 'inline-block', 'p-4', 'text-gray-600', 'rounded-t-lg', 'hover:bg-gray-400']"
+            @click="changeFilterOption('done')">
+            Done
+          </a>
+        </li>
+        <li class="me-2">
+          <a type="button" aria-current="page"
+            :class="[filterOption === 'all' ? 'bg-gray-400' : 'bg-gray-100', 'inline-block', 'p-4', 'text-gray-600', 'rounded-t-lg', 'hover:bg-gray-400']"
+            @click="changeFilterOption('all')">
+            All
+          </a>
+        </li>
+      </ul>
+
+      <ToDosComponent :canAdd="filterOption === 'todo'" :todos="todos" @addTodo="addTodo" @completeTodo="completeTodo"
+        @deleteTodo="deleteTodo" />
     </div>
   </section>
 </template>

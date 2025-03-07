@@ -3,7 +3,7 @@
     {
       "id": "0",
       "text": "Make a to-do list",
-      "done": false
+      "done": true
     },
     {
       "id": "1",
@@ -28,7 +28,7 @@
     {
       "id": "5",
       "text": "Call mom",
-      "done": false
+      "done": true
     },
     {
       "id": "6",
